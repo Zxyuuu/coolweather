@@ -71,16 +71,6 @@ public class WeatherActivity extends AppCompatActivity {
     public void requestWeather(final String weatherId){
         String weatherUrl = "http://guolin.tech/api/weather?cityId="+weatherId+"&key=bc0418b57b2d4918819d3974ac1285d9";
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(WeatherActivity.this,"获取天气信息失败",Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -99,7 +89,16 @@ public class WeatherActivity extends AppCompatActivity {
                         }
                     }
                 });
-
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this,"获取天气信息失败",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -116,11 +115,11 @@ public class WeatherActivity extends AppCompatActivity {
         forecastLayout.removeAllViews();
         for(Forecast forecast:weather.forecastList){
             View view  = LayoutInflater.from(this).inflate(R.layout.forecast_item,forecastLayout,false);
-            TextView dataText = (TextView) findViewById(R.id.date_text);
+            TextView dateText = (TextView) findViewById(R.id.date_text);
             TextView infoText = (TextView) findViewById(R.id.info_text);
             TextView maxText = (TextView) findViewById(R.id.max_text);
             TextView minText = (TextView) findViewById(R.id.min_text);
-            dataText.setText(forecast.date);
+            dateText.setText(forecast.date);
             infoText.setText(forecast.more.info);
             maxText.setText(forecast.temperature.max);
             minText.setText(forecast.temperature.min);
